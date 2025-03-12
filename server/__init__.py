@@ -16,11 +16,11 @@ def create_app(app_name: str = 'Mechanic Finder') -> FastAPI:
     app = FastAPI(
         title=app_name.capitalize(), # app_configs.APP_NAME.capitalize(),
         description=f'{app_name.capitalize()}`s Api Documentation', # f"{app_configs.APP_NAME.capitalize()}'s Api Documentation",
-        docs_url='api/docs', # app_configs.SWAGGER_DOCS_URL,
+        docs_url='/api/docs', # app_configs.SWAGGER_DOCS_URL,
     )
 
     @app.get("/", include_in_schema=False)
     def redirect():
-        return RedirectResponse(url='api/docs', status_code=302)
+        return RedirectResponse(url='/api/docs', status_code=302)
     
     return app
