@@ -10,6 +10,7 @@ from ..utils import paginator
 
 ModelType = Union[Mechanics, GeoHashTable]
 
+
 class Repository:
     """Repository"""
 
@@ -30,13 +31,14 @@ class Repository:
             raise e
 
     async def update(
-            self,
-            entity: ModelType,
-            data: dict = None
-        ) -> ModelType:
+        self,
+        entity: ModelType,
+        data: dict = None
+    ) -> ModelType:
         """Updates entity"""
         try:
-            entity_to_update = self.db.query(self._Model).filter_by(id=entity.id)
+            entity_to_update = self.db.query(self._Model)\
+                .filter_by(id=entity.id)
             entity_to_update.update(data, synchronize_session="evaluate")
             self.db.commit()
             return entity_to_update.all()
@@ -50,18 +52,21 @@ class Repository:
             self.db.commit()
         except Exception as e:
             raise e
-        return True    
+        return True
 
     async def get_by_id(self, id: str):
         try:
-            entity = self.db.query(self._Model).filter(self._Model.id == id).order_by(self._Model.id)
+            entity = self.db.query(self._Model).filter(self._Model.id == id)\
+                .order_by(self._Model.id)
             if entity:
                 return entity.first()
             # raise ExcRaiser404(message='Entity not found')
         except Exception as e:
             raise e
-        
-    async def get_by_attr(self, attr: dict[str, str | Any], many: bool = False):
+
+    async def get_by_attr(
+        self, attr: dict[str, str | Any], many: bool = False
+    ):
         try:
             entity = self.db.query(self._Model).filter_by(**attr)
             if entity and not many:
@@ -90,10 +95,13 @@ class Repository:
         entity = self.db.query(self._Model).filter_by(**filter).first()
         return True if entity else False
 
-    async def get_all(self, filter: dict = None, relative: bool = False) -> PagedResponse:
-    
+    async def get_all(
+        self, filter: dict = None, relative: bool = False
+    ) -> PagedResponse:
+
         page = filter.pop('page') if (filter and filter.get('page')) else 1
-        per_page = filter.pop('per_page') if (filter and filter.get('per_page')) else 10
+        per_page = filter.pop('per_page') \
+            if (filter and filter.get('per_page')) else 10
         limit = per_page
         offset = paginator(page, per_page)
         QueryModel = self._Model

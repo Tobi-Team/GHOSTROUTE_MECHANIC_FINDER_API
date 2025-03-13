@@ -13,10 +13,14 @@ class GeoHashTable(Base):
     geohash = Column(String, nullable=False, index=True, unique=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    mech_id = Column(UUID(as_uuid=True), ForeignKey("mechanics.id", ondelete="CASCADE"), nullable=False)
+    mech_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("mechanics.id", ondelete="CASCADE"),
+        nullable=False
+    )
 
     mechanics = relationship("Mechanics", back_populates="geohash")
-    
+
     def __init__(self, geohash: str, mech_id: str) -> None:
         self.geohash = geohash
         self.latitude = self.decode_geohash(self.geohash)[0]
@@ -24,8 +28,8 @@ class GeoHashTable(Base):
         self.mech_id = mech_id
 
     @staticmethod
-    def encode_geohash(latitude: float, longitude: float, precision: int = 6) -> str:
-        return pgh.encode(latitude, longitude, precision)
+    def encode_geohash(lat: float, long: float, precision: int = 6) -> str:
+        return pgh.encode(lat, long, precision)
 
     @staticmethod
     def decode_geohash(geohash: str) -> tuple[float, float]:

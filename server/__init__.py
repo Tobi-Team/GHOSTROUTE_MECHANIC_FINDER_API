@@ -7,7 +7,8 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from server.config import init_db, app_configs
+from .config import init_db, app_configs
+from .controllers import router
 
 
 def create_app(app_name: str = 'Mechanic Finder') -> FastAPI:
@@ -42,5 +43,6 @@ def create_app(app_name: str = 'Mechanic Finder') -> FastAPI:
     async def not_found_404(request, exc):
         return RedirectResponse(url='/api/docs', status_code=302)
 
+    app.include_router(router)
     init_db()
     return app

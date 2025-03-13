@@ -2,7 +2,9 @@ from sqlalchemy.orm import Session
 from server.models.geohash import GeoHashTable
 
 from ..models.mechanics import Mechanics
-from ..schemas.mechanic_schemas import GetMechSchema, GetMechSchemaPartial, GetMechanics
+from ..schemas.mechanic_schemas import (
+    GetMechSchema, GetMechSchemaPartial, GetMechanics
+)
 from ..repositories.repository import Repository
 from ..utils import get_neighboring_grids, haversine
 
@@ -28,7 +30,7 @@ class MechanicRepository(Repository):
         if not mech:
             return False
         return mech
-    
+
     async def get_by_username(self, username: str) -> Mechanics:
         """Get a mech by username
         Args:
@@ -37,13 +39,15 @@ class MechanicRepository(Repository):
             Mechanics: mechanic model instance
         """
         try:
-            mech = self.db.query(self._Model).filter_by(username=username).first()
+            mech = self.db.query(self._Model).filter_by(
+                username=username
+            ).first()
         except Exception as e:
             raise e
         if not mech:
             return False
         return mech
-    
+
     async def get_by_phone(self, phone: str) -> Mechanics:
         """Get a mech by phone
         Args:
@@ -59,7 +63,9 @@ class MechanicRepository(Repository):
             return False
         return mech
 
-    async def get_by_loc(self, lat: float, long: float, radius: float) -> GetMechanics:
+    async def get_by_loc(
+            self, lat: float, long: float, radius: float
+    ) -> GetMechanics:
         """Get Mechanics by location
         Args:
             lat (float): The clients
@@ -72,9 +78,9 @@ class MechanicRepository(Repository):
         """
         try:
             user_geohash = GeoHashTable.encode_geohash(lat, long, precision=6)
-            
+
             grids_to_search = get_neighboring_grids(user_geohash)
-            
+
             geo_mechs = self.db.query(GeoHashTable).filter(
                 GeoHashTable.geohash.in_(grids_to_search)
             ).all()
@@ -89,11 +95,13 @@ class MechanicRepository(Repository):
                 validated_mech = GetMechSchema.model_validate(mech_dict)
                 mech_schemas.append(validated_mech)
 
-            close_mechs = [mech for mech in mech_schemas if mech.distance <= radius]
+            close_mechs = [
+                mech for mech in mech_schemas if mech.distance <= radius
+            ]
             sorted_mechs = sorted(close_mechs, key=lambda x: x.distance)
 
             return GetMechanics(data=sorted_mechs, count=len(sorted_mechs))
-        
+
         except Exception as e:
             raise e
 

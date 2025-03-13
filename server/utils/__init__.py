@@ -2,6 +2,7 @@ from math import sqrt, cos, radians, sin, atan2
 import pygeohash as pgh
 import geohash
 
+
 def convert_km_lat(km: float) -> float:
     """Converts Kilometer to latitude
     Args:
@@ -9,7 +10,7 @@ def convert_km_lat(km: float) -> float:
     Returns:
         float: Distance in degree latitude
     """
-    DEGREE_LATITUDE = 111.32 # 1 degree of latitude in kilometers
+    DEGREE_LATITUDE = 111.32  # 1 degree of latitude in kilometers
 
     return round(km/DEGREE_LATITUDE, 5)
 
@@ -22,7 +23,7 @@ def convert_km_long(km: float, lat: float) -> float:
     Returns:
         float: Distance in degree longitude
     """
-    DEGREE_LATITUDE = 111.32 # 1 degree of latitude in kilometers
+    DEGREE_LATITUDE = 111.32  # 1 degree of latitude in kilometers
 
     return round(km / (DEGREE_LATITUDE * cos(radians(lat))), 5)
 
@@ -46,35 +47,38 @@ def haversine(lat2: float, long2: float, lat1: float, long1: float) -> float:
     """
     # Radius of the Earth in kilometers
     R = 6371.0
-    
+
     # Convert degrees to radians
     lat1_rad = radians(lat1)
     lon1_rad = radians(long1)
     lat2_rad = radians(lat2)
     lon2_rad = radians(long2)
-    
+
     # Differences in coordinates
     delta_lat = lat2_rad - lat1_rad
     delta_lon = lon2_rad - lon1_rad
-    
+
     # Haversine formula
-    a = sin(delta_lat / 2)**2 + cos(lat1_rad) * cos(lat2_rad) * sin(delta_lon / 2)**2
+    a = (
+            sin(delta_lat / 2)**2 + cos(lat1_rad)
+            * cos(lat2_rad) * sin(delta_lon / 2)**2
+        )
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
-    
+
     # Distance in kilometers
     distance = R * c
-    
+
     return distance
 
 
 def paginator(page: int, item_per_page: int) -> int:
     """
     Paginates the query results.
-    
+
     Parameters:
         page (int): The page number.
         item_per_page (int): The number of items per page.
-        
+
     Returns:
         int: The offset value.
     """
