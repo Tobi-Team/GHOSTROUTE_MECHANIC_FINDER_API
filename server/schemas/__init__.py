@@ -5,6 +5,7 @@ from typing import Any, Union, TypeVar, Generic, Optional
 
 T = TypeVar("T")
 
+
 class ServiceResultModel(Generic[T]):
     def __init__(self, data=None) -> None:
         self.data: Union[T, None] = data

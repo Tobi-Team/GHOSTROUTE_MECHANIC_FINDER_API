@@ -31,12 +31,12 @@ class Mechanics(BaseModel):
 
     # Ratings/reviews
     contacted = Column(Integer, nullable=False, default=0)
-    rating = Column(Float, nullable=False, default=0.0) # ratings/5
+    rating = Column(Float, nullable=False, default=0.0)  # ratings/5
     review = Column(JSON, nullable=True)
 
     # Professional
-    speciality = Column(String, nullable=True) # Speciality
-    skills = Column(JSON, nullable=True) # List of skills
+    speciality = Column(String, nullable=True)  # Speciality
+    skills = Column(JSON, nullable=True)  # List of skills
 
     # Relationships
     geohash = relationship(
